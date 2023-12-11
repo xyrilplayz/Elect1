@@ -20,4 +20,23 @@ namespace AseanPhonebook
             return $"{CountryCode}-{AreaCode} {LastName}, {FirstName}, {PhoneNumber}, {StudentID}";
         }
     }
+    class Program
+    {
+        static List<Student> students = new List<Student>();
+        private const string AllCountriesCode = "ALL";
+
+        static void Main(string[] args)
+        {
+            int option;
+
+            {
+                Console.WriteLine("[1] Store to ASEAN phonebook");
+                Console.WriteLine("[2] Edit entry in ASEAN phonebook");
+                Console.WriteLine("[3] Search ASEAN phonebook by country");
+                Console.WriteLine("[4] Exit");
+                Console.Write("Enter an option: ");
+                option = int.Parse(Console.ReadLine());
+            }
+        }
+    }
 }
