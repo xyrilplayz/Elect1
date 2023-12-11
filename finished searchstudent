@@ -1,0 +1,109 @@
+static void SearchStudent()
+        {
+            Console.WriteLine("Search ASEAN phonebook by country:");
+
+            List<string> selectedCountryCodes = new List<string>();
+
+            int userChoice;
+
+            do
+            {
+                Console.Write("\n[1] Malaysia \n[2] Indonesia \n[3] Philippines \n[4] Singapore \n[5] Thailand \n[6] All Countries  \nEnter your choice and 0 to finish: ");
+
+                if (!int.TryParse(Console.ReadLine(), out userChoice))
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                    continue;
+                }
+
+                if (userChoice < 0 || userChoice > 6)
+                {
+                    Console.WriteLine("Invalid choice. Please enter a number between 0 and 6.");
+                    continue;
+                }
+
+                if (userChoice == 0)
+                {
+                    break;
+                }
+
+                string countryCode = GetUserChoiceCountryCode(userChoice);
+                selectedCountryCodes.Add(countryCode);
+
+            } while (true);
+
+            var results = students
+                .Where(student =>
+                {
+                    if (selectedCountryCodes.Contains(AllCountriesCode))
+                        return true;
+                    else
+                        return selectedCountryCodes.Contains(student.CountryCode);
+                })
+                .OrderBy(student => student.LastName)
+                .ThenBy(student => student.FirstName)   
+                .ToList();
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("No students found for the given country code(s).");
+            }
+            else
+            {
+                var selectedCountryNames = selectedCountryCodes
+                    .Select(code => GetCountryName(code))
+                    .Where(name => name != null)
+                    .Distinct();
+
+                Console.WriteLine($"Here are the students from {string.Join(" and ", selectedCountryNames)}:");
+
+                foreach (var student in results)
+                {
+                    string genderDescription = student.Gender == 'M' ? "He" : "She";
+
+                    Console.WriteLine($"{student.LastName}, {student.FirstName} with student number: {student.StudentID} is a {student.Occupation}. {genderDescription} has Phone number that is {student.CountryCode}-{student.AreaCode}-{student.PhoneNumber}.");
+                }
+            }
+        }
+
+        static string GetUserChoiceCountryCode(int choice)
+        {
+            switch (choice)
+            {
+                case 1:
+                    return "60"; // Malaysia
+                case 2:
+                    return "62"; // Indonesia
+                case 3:
+                    return "63"; // Philippines
+                case 4:
+                    return "65"; // Singapore
+                case 5:
+                    return "66"; // Thailand
+                case 6:
+                    return AllCountriesCode;  // Show results for all countries
+                default:
+                    return null;
+            }
+        }
+
+        static string GetCountryName(string countryCode)
+        {
+            switch (countryCode)
+            {
+                case "60":
+                    return "Malaysia";
+                case "62":
+                    return "Indonesia";
+                case "63":
+                    return "Philippines";
+                case "65":
+                    return "Singapore";
+                case "66":
+                    return "Thailand";
+                default:
+                    return null;
+            }
+        }
+    }
+}
